@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8c98f3e8-bdca-46ef-86d2-bd3ae7bd48fa" name="Changes" comment="" />
+    <list default="true" id="8c98f3e8-bdca-46ef-86d2-bd3ae7bd48fa" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/$PRODUCT_WORKSPACE_FILE$" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/javalgebra.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/javalgebra.iml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,7 +51,7 @@
       <option name="presentableId" value="Default" />
       <updated>1661261593951</updated>
       <workItem from="1661710192347" duration="122000" />
-      <workItem from="1661710612703" duration="322000" />
+      <workItem from="1661710612703" duration="641000" />
     </task>
     <task id="LOCAL-00001">
       <created>1661261669242</created>
