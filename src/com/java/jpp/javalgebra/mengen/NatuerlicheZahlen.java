@@ -10,16 +10,17 @@ public class NatuerlicheZahlen implements Menge<BigInteger> {
 
     @Override
     public Stream<BigInteger> getElements() {
-        throw new UnsupportedOperationException();
+        return Stream.iterate(BigInteger.ONE, i -> i.add(BigInteger.ONE));
     }
+
 
     @Override
     public boolean contains(BigInteger element) {
-        throw new UnsupportedOperationException();
+        return element.intValue() > 0;
     }
 
     @Override
     public Optional<Integer> getSize() {
-        throw new UnsupportedOperationException();
+        return Optional.empty();
     }
 }

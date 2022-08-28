@@ -1,31 +1,40 @@
 package com.java.jpp.javalgebra;
 
+import java.util.Objects;
+
 public class Tupel<T> {
 
+    private T first;
+    private T second;
+
     public Tupel(T first, T second) {
-        throw new UnsupportedOperationException();
+        this.first = first;
+        this.second = second;
     }
 
     public T getFirst() {
-        throw new UnsupportedOperationException();
+        return first;
     }
 
     public T getSecond() {
-        throw new UnsupportedOperationException();
+        return second;
     }
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException();
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tupel<?> tupel = (Tupel<?>) o;
+        return first.equals(tupel.first) && second.equals(tupel.second);
     }
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException();
+        return Objects.hash(first, second);
     }
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException();
+        return "(" + first + ", " + second + ")";
     }
 }
