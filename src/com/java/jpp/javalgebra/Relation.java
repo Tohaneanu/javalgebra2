@@ -64,7 +64,7 @@ public class Relation<T> implements Menge<Tupel<T>> {
 
     public boolean isAsymmetrisch() {
         return getElements().allMatch(t -> isInRelation.apply(t.getFirst(), t.getSecond())) &&
-                getElements().noneMatch(t -> isInRelation.apply(t.getSecond(), t.getFirst()));
+                !getElements().noneMatch(t -> isInRelation.apply(t.getSecond(), t.getFirst()));
     }
 
     public boolean isAntisymmetrisch() {
@@ -87,7 +87,7 @@ public class Relation<T> implements Menge<Tupel<T>> {
         if (!isAequivalenzrelation())
             throw new UnsupportedOperationException("Relation is not Equivalent");
 
-        return null;
+        return new HashSet<>();
     }
 
     public boolean isTotalordnung() {
@@ -98,6 +98,6 @@ public class Relation<T> implements Menge<Tupel<T>> {
         if (!isTotalordnung())
             throw new UnsupportedOperationException("Not a Total Order");
 
-        return null;
+        return menge.getElements().toList();
     }
 }

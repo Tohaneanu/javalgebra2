@@ -80,7 +80,6 @@ public class Abbildung<T,S> {
     public Abbildung<S, T> getUmkehrabbildung() {
         if (!isBijektiv())
             throw new UnsupportedOperationException("Abbildung not bijektiv");
-
         return null;
     }
 }
