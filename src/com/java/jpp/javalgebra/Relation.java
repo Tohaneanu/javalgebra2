@@ -13,8 +13,7 @@ public class Relation<T> implements Menge<Tupel<T>> {
     Set<Tupel<T>> tuples = new HashSet<>();
 
     public Relation(Menge<T> menge, BiFunction<T, T, Boolean> isInRelation) {
-        if (!menge.getSize().isPresent())
-            throw new IllegalArgumentException("Infinite Set not allowed!");
+        if (!menge.getSize().isPresent()) throw new IllegalArgumentException("Infinite Set not allowed!");
 
         this.menge = menge;
         this.isInRelation = isInRelation;
@@ -33,18 +32,12 @@ public class Relation<T> implements Menge<Tupel<T>> {
 
     @Override
     public Stream<Tupel<T>> getElements() {
-      return this.tuples.stream();
+        return this.tuples.stream();
     }
 
     @Override
     public boolean contains(Tupel<T> element) {
-        if (menge.contains(element.getFirst()) &&
-                menge.contains(element.getSecond()) &&
-                isInRelation.apply(element.getFirst(), element.getSecond()))
-            return true;
-
-
-        return false;
+        return menge.contains(element.getFirst()) && menge.contains(element.getSecond()) && isInRelation.apply(element.getFirst(), element.getSecond());
     }
 
     public boolean isReflexiv() {
@@ -58,13 +51,19 @@ public class Relation<T> implements Menge<Tupel<T>> {
 
 
     public boolean isSymmetrisch() {
-        return getElements().allMatch(t -> isInRelation.apply(t.getFirst(), t.getSecond())) &&
-                getElements().allMatch(t -> isInRelation.apply(t.getSecond(), t.getFirst()));
+        return getElements().allMatch(t -> isInRelation.apply(t.getFirst(), t.getSecond())) && getElements().allMatch(t -> isInRelation.apply(t.getSecond(), t.getFirst()));
     }
 
     public boolean isAsymmetrisch() {
-        return getElements().allMatch(t -> isInRelation.apply(t.getFirst(), t.getSecond())) &&
-                !getElements().noneMatch(t -> isInRelation.apply(t.getSecond(), t.getFirst()));
+        List<T> elements = menge.getElements().toList();
+        for (T elem1 : elements)
+            for (T elem2 : elements) {
+                if (isInRelation.apply(elem1,elem2)){
+                    if (isInRelation.apply(elem2,elem1))
+                        return false;
+                }
+            }
+        return true;
     }
 
     public boolean isAntisymmetrisch() {
@@ -72,11 +71,22 @@ public class Relation<T> implements Menge<Tupel<T>> {
     }
 
     public boolean isTransitiv() {
-        throw new UnsupportedOperationException();
+        List<T> elements = menge.getElements().toList();
+        for (int i = 0; i < elements.size()-2; i++)
+            if (isInRelation.apply(elements.get(i), elements.get(i + 1)) && isInRelation.apply(elements.get(i + 1), elements.get(i + 2)))
+                if (!isInRelation.apply(elements.get(i), elements.get(i + 2)))
+                    return false;
+        return true;
     }
 
     public boolean isTotal() {
-        throw new UnsupportedOperationException();
+        List<T> elements = menge.getElements().toList();
+        for (T elem1 : elements)
+            for (T elem2 : elements) {
+                if (isInRelation.apply(elem1, elem2) || isInRelation.apply(elem2, elem1)) {
+                } else return false;
+            }
+        return false;
     }
 
     public boolean isAequivalenzrelation() {
@@ -84,8 +94,7 @@ public class Relation<T> implements Menge<Tupel<T>> {
     }
 
     public Set<Set<T>> getAequivalenzklassen() {
-        if (!isAequivalenzrelation())
-            throw new UnsupportedOperationException("Relation is not Equivalent");
+        if (!isAequivalenzrelation()) throw new UnsupportedOperationException("Relation is not Equivalent");
 
         return new HashSet<>();
     }
@@ -95,9 +104,8 @@ public class Relation<T> implements Menge<Tupel<T>> {
     }
 
     public List<T> getElementsInOrder() {
-        if (!isTotalordnung())
-            throw new UnsupportedOperationException("Not a Total Order");
+        if (!isTotalordnung()) throw new UnsupportedOperationException("Not a Total Order");
 
-        return menge.getElements().toList();
+        return menge.getElements().sorted((t1,t2)->isInRelation.apply(t1,t2) ? 1:-1).toList();
     }
 }

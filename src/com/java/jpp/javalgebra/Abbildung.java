@@ -70,7 +70,12 @@ public class Abbildung<T,S> {
     }
 
     public boolean isSurjektiv() {
-        return getUrbildVon(ziel).getSize().get() >= ziel.getSize().get();
+        List<S> zielElements = ziel.getElements().toList();
+        for(S elem: zielElements){
+            if (!elements.contains(elem))
+                return false;
+        }
+        return true;
     }
 
     public boolean isBijektiv() {

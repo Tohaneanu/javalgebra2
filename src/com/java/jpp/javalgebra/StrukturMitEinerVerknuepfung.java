@@ -6,15 +6,16 @@ public class StrukturMitEinerVerknuepfung<T> {
 
     Menge<T> menge;
     Abbildung<Tupel<T>, T> verknuepfung;
-    List<T> mengeElements;
 
     public StrukturMitEinerVerknuepfung(Menge<T> menge, Abbildung<Tupel<T>, T> verknuepfung) {
         if (!menge.getSize().isPresent())
             throw new IllegalArgumentException("Infinite Set not allowed!");
-
+        List<T> elements = menge.getElements().toList();
+        for (T t1 : elements)
+            for (T t2 : elements)
+                verknuepfung.apply(new Tupel<>(t1, t2));
         this.menge = menge;
         this.verknuepfung = verknuepfung;
-        this.mengeElements = menge.getElements().toList();
     }
 
     public T apply(T t1, T t2) {
@@ -25,6 +26,7 @@ public class StrukturMitEinerVerknuepfung<T> {
     }
 
     public boolean isHalbgruppe() {
+        List<T> mengeElements = menge.getElements().toList();
         for (T elem1 : mengeElements)
             for (T elem2 : mengeElements)
                 for (T elem3 : mengeElements) {
@@ -35,6 +37,7 @@ public class StrukturMitEinerVerknuepfung<T> {
     }
 
     public boolean isMonoid() {
+        List<T> mengeElements = menge.getElements().toList();
         if (!isHalbgruppe())
             return false;
         for (T elem1 : mengeElements)
@@ -46,6 +49,7 @@ public class StrukturMitEinerVerknuepfung<T> {
     }
 
     public T getNeutralesElement() {
+        List<T> mengeElements = menge.getElements().toList();
         if(!isMonoid())
             throw new UnsupportedOperationException("the structure is not a monoid!");
         for (T elem1 : mengeElements)
@@ -63,6 +67,7 @@ public class StrukturMitEinerVerknuepfung<T> {
     }
 
     public boolean isKommutativ() {
+        List<T> mengeElements = menge.getElements().toList();
         for (T elem1 : mengeElements)
             for (T elem2 : mengeElements){
                 if (verknuepfung.apply(new Tupel<>(elem1, elem2))!=verknuepfung.apply(new Tupel<>(elem2, elem1)))
