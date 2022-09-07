@@ -12,8 +12,11 @@ public class StrukturMitZweiVerknuepfungen<T> {
         if (!menge.getSize().isPresent())
             throw new IllegalArgumentException("Infinite Set not allowed!");
 //        if (plus.)
-        menge.getElements().flatMap(elem1 -> menge.getElements().map(elem2 -> applyMal(elem1, elem2)));
-        menge.getElements().flatMap(elem1 -> menge.getElements().map(elem2 -> applyPlus(elem1, elem2)));
+        List<T> elements = menge.getElements().toList();
+        for (T t1 : elements)
+            for (T t2 : elements)
+                if (!menge.contains(plus.apply(new Tupel<>(t1, t2))) || !menge.contains(mal.apply(new Tupel<>(t1, t2))))
+                    throw new IllegalArgumentException("map value is not in menge!");
         this.menge = menge;
         this.plus = plus;
         this.mal = mal;
@@ -70,12 +73,15 @@ public class StrukturMitZweiVerknuepfungen<T> {
         if (!isRing())
             throw new UnsupportedOperationException("The structure is not a ring!");
         List<T> mengeElements = menge.getElements().toList();
-        for (T elem1 : mengeElements)
-            for (T elem2 : mengeElements) {
-                if (plus.apply(new Tupel<>(elem1, elem2)) == plus.apply(new Tupel<>(elem2, elem1)) && plus.apply(new Tupel<>(elem1, elem2)) == elem1)
-                    return elem1;
+        for (int i = 0; i < mengeElements.size(); i++) {
+            for (int j = 0; j < mengeElements.size(); j++) {
+                if (j == i)
+                    continue;
+                if (plus.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(plus.apply(new Tupel<>(mengeElements.get(j), mengeElements.get(i)))) && plus.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(mengeElements.get(i)))
+                    return mengeElements.get(j);
             }
-        throw new UnsupportedOperationException("dont find null element!");
+        }
+        throw new UnsupportedOperationException("the structure is not a monoid!");
     }
 
     public boolean isKoerper() {
@@ -85,7 +91,7 @@ public class StrukturMitZweiVerknuepfungen<T> {
         T nElem = null;
         try {
             nElem = getNull();
-        } catch (UnsupportedOperationException ex) {
+        } catch (UnsupportedOperationException ignored) {
 
         }
         for (T elem1 : mengeElements)
@@ -103,11 +109,14 @@ public class StrukturMitZweiVerknuepfungen<T> {
         if (!isKoerper())
             throw new UnsupportedOperationException("The structure is not a Koerper!");
         List<T> mengeElements = menge.getElements().toList();
-        for (T elem1 : mengeElements)
-            for (T elem2 : mengeElements) {
-                if (plus.apply(new Tupel<>(elem1, elem2)) == plus.apply(new Tupel<>(elem2, elem1)) && plus.apply(new Tupel<>(elem1, elem2)) == elem1)
-                    return elem1;
+        for (int i = 0; i < mengeElements.size(); i++) {
+            for (int j = 0; j < mengeElements.size(); j++) {
+                if (i == j)
+                    continue;
+                if (plus.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))) == plus.apply(new Tupel<>(mengeElements.get(j), mengeElements.get(i))) && plus.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))) == mengeElements.get(i))
+                    return mengeElements.get(j);
             }
+        }
         throw new UnsupportedOperationException("dont find null element!");
     }
 }

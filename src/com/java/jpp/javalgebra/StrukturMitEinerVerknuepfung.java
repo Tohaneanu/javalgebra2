@@ -13,7 +13,8 @@ public class StrukturMitEinerVerknuepfung<T> {
         List<T> elements = menge.getElements().toList();
         for (T t1 : elements)
             for (T t2 : elements)
-                verknuepfung.apply(new Tupel<>(t1, t2));
+                if (!menge.contains(verknuepfung.apply(new Tupel<>(t1, t2))))
+                    throw new IllegalArgumentException("map value is not in menge!");
         this.menge = menge;
         this.verknuepfung = verknuepfung;
     }
@@ -30,7 +31,7 @@ public class StrukturMitEinerVerknuepfung<T> {
         for (T elem1 : mengeElements)
             for (T elem2 : mengeElements)
                 for (T elem3 : mengeElements) {
-                    if (verknuepfung.apply(new Tupel<>(verknuepfung.apply(new Tupel<>(elem1, elem2)), elem3)) != verknuepfung.apply(new Tupel<>(elem1,verknuepfung.apply(new Tupel<>(elem2, elem3)))))
+                    if (verknuepfung.apply(new Tupel<>(verknuepfung.apply(new Tupel<>(elem1, elem2)), elem3)) != verknuepfung.apply(new Tupel<>(elem1, verknuepfung.apply(new Tupel<>(elem2, elem3)))))
                         return false;
                 }
         return true;
@@ -40,46 +41,68 @@ public class StrukturMitEinerVerknuepfung<T> {
         List<T> mengeElements = menge.getElements().toList();
         if (!isHalbgruppe())
             return false;
-        for (T elem1 : mengeElements)
-            for (T elem2 : mengeElements){
-                if (verknuepfung.apply(new Tupel<>(elem1, elem2))==verknuepfung.apply(new Tupel<>(elem2, elem1)) && verknuepfung.apply(new Tupel<>(elem2, elem1))==elem1)
+        for (int i = 0; i < mengeElements.size(); i++) {
+            for (int j = 0; j < mengeElements.size(); j++) {
+                if (j == i)
+                    continue;
+                if (verknuepfung.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(verknuepfung.apply(new Tupel<>(mengeElements.get(j), mengeElements.get(i)))) && verknuepfung.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(mengeElements.get(i)))
                     return true;
             }
+        }
         return false;
     }
 
     public T getNeutralesElement() {
         List<T> mengeElements = menge.getElements().toList();
-        if(!isMonoid())
+        if (!isMonoid())
             throw new UnsupportedOperationException("the structure is not a monoid!");
-        for (T elem1 : mengeElements)
-            for (T elem2 : mengeElements){
-                if (verknuepfung.apply(new Tupel<>(elem1, elem2))==verknuepfung.apply(new Tupel<>(elem2, elem1)) && verknuepfung.apply(new Tupel<>(elem2, elem1))==elem1)
-                    return elem1;
+        for (int i = 0; i < mengeElements.size(); i++) {
+            for (int j = 0; j < mengeElements.size(); j++) {
+                if (j == i)
+                    continue;
+                if (verknuepfung.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(verknuepfung.apply(new Tupel<>(mengeElements.get(j), mengeElements.get(i)))) && verknuepfung.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(mengeElements.get(i)))
+                    return mengeElements.get(j);
             }
-        throw new UnsupportedOperationException("element not found");
+        }
+        throw new UnsupportedOperationException("the structure is not a monoid!");
     }
 
     public boolean isGruppe() {
-     if (!isMonoid())
-         return false;
-     return true;
+        if (!isMonoid())
+            return false;
+        T neutralElem = getNeutralesElement();
+        List<T> mengeElements = menge.getElements().toList();
+        boolean isInvers;
+        for (int i = 0; i < mengeElements.size(); i++) {
+            isInvers = false;
+            for (int j = 0; j < mengeElements.size(); j++) {
+                if (j == i)
+                    continue;
+                if (verknuepfung.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(verknuepfung.apply(new Tupel<>(mengeElements.get(j), mengeElements.get(i)))) && verknuepfung.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(neutralElem)) {
+                    isInvers = true;
+                }
+            }
+            if (!isInvers)
+                return false;
+        }
+
+        return true;
     }
 
     public boolean isKommutativ() {
         List<T> mengeElements = menge.getElements().toList();
         for (T elem1 : mengeElements)
-            for (T elem2 : mengeElements){
-                if (verknuepfung.apply(new Tupel<>(elem1, elem2))!=verknuepfung.apply(new Tupel<>(elem2, elem1)))
+            for (T elem2 : mengeElements) {
+                if (verknuepfung.apply(new Tupel<>(elem1, elem2)) != verknuepfung.apply(new Tupel<>(elem2, elem1)))
                     return false;
             }
         return true;
     }
 
     public boolean isAbelscheGruppe() {
-       if (isKommutativ())
-           return true;
-       return false;
+        if (isKommutativ() && isGruppe())
+            return true;
+        return false;
 
     }
 }

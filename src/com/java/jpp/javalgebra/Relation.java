@@ -58,8 +58,8 @@ public class Relation<T> implements Menge<Tupel<T>> {
         List<T> elements = menge.getElements().toList();
         for (T elem1 : elements)
             for (T elem2 : elements) {
-                if (isInRelation.apply(elem1,elem2)){
-                    if (isInRelation.apply(elem2,elem1))
+                if (isInRelation.apply(elem1, elem2)) {
+                    if (isInRelation.apply(elem2, elem1))
                         return false;
                 }
             }
@@ -67,15 +67,35 @@ public class Relation<T> implements Menge<Tupel<T>> {
     }
 
     public boolean isAntisymmetrisch() {
-        return isSymmetrisch() && getElements().allMatch(t -> t.getFirst().equals(t.getSecond()));
+        List<T> elements = menge.getElements().toList();
+        for (T elem1 : elements)
+            for (T elem2 : elements) {
+                if (isInRelation.apply(elem1, elem2) && isInRelation.apply(elem2, elem1)) {
+                    if (elem1 != elem2)
+                        return false;
+                }
+            }
+        return true;
     }
 
     public boolean isTransitiv() {
         List<T> elements = menge.getElements().toList();
-        for (int i = 0; i < elements.size()-2; i++)
-            if (isInRelation.apply(elements.get(i), elements.get(i + 1)) && isInRelation.apply(elements.get(i + 1), elements.get(i + 2)))
-                if (!isInRelation.apply(elements.get(i), elements.get(i + 2)))
-                    return false;
+        for (int i = 0; i < elements.size(); i++) {
+            for (int j = 0; j < elements.size(); j++) {
+                if (j == i)
+                    continue;
+                if (isInRelation.apply(elements.get(i), elements.get(j))) {
+                    for (int k = 0; k < elements.size(); k++) {
+                        if (k == j)
+                            continue;
+                        if (isInRelation.apply(elements.get(j), elements.get(k))) {
+                            if (!isInRelation.apply(elements.get(i), elements.get(k)))
+                                return false;
+                        }
+                    }
+                }
+            }
+        }
         return true;
     }
 
@@ -86,17 +106,17 @@ public class Relation<T> implements Menge<Tupel<T>> {
                 if (isInRelation.apply(elem1, elem2) || isInRelation.apply(elem2, elem1)) {
                 } else return false;
             }
-        return false;
-    }
-
-    public boolean isAequivalenzrelation() {
-        return (isReflexiv() && isSymmetrisch() && isTransitiv());
+        return true;
     }
 
     public Set<Set<T>> getAequivalenzklassen() {
         if (!isAequivalenzrelation()) throw new UnsupportedOperationException("Relation is not Equivalent");
 
         return new HashSet<>();
+    }
+
+    public boolean isAequivalenzrelation() {
+        return (isReflexiv() && isSymmetrisch() && isTransitiv());
     }
 
     public boolean isTotalordnung() {
@@ -106,6 +126,6 @@ public class Relation<T> implements Menge<Tupel<T>> {
     public List<T> getElementsInOrder() {
         if (!isTotalordnung()) throw new UnsupportedOperationException("Not a Total Order");
 
-        return menge.getElements().sorted((t1,t2)->isInRelation.apply(t1,t2) ? 1:-1).toList();
+        return menge.getElements().sorted((t1, t2) -> isInRelation.apply(t1, t2) ? 1 : -1).toList();
     }
 }
