@@ -1,6 +1,6 @@
 package com.java.jpp.javalgebra;
 
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class StrukturMitZweiVerknuepfungen<T> {
@@ -73,15 +73,43 @@ public class StrukturMitZweiVerknuepfungen<T> {
         if (!isRing())
             throw new UnsupportedOperationException("The structure is not a ring!");
         List<T> mengeElements = menge.getElements().toList();
+        HashMap<T, Integer> result = new HashMap<T, Integer>();
         for (int i = 0; i < mengeElements.size(); i++) {
             for (int j = 0; j < mengeElements.size(); j++) {
                 if (j == i)
                     continue;
-                if (plus.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(plus.apply(new Tupel<>(mengeElements.get(j), mengeElements.get(i)))) && plus.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(mengeElements.get(i)))
-                    return mengeElements.get(j);
+                if (plus.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(plus.apply(new Tupel<>(mengeElements.get(j), mengeElements.get(i)))) && plus.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(mengeElements.get(i))) {
+                    if (result.containsKey(mengeElements.get(j)))
+                        result.put(mengeElements.get(j), result.get(mengeElements.get(j)) + 1);
+                    else
+                        result.put(mengeElements.get(j), 0);
+                }
             }
         }
-        throw new UnsupportedOperationException("the structure is not a monoid!");
+        result = sortByValue(result);
+        return result.keySet().stream().toList().get(0);
+    }
+
+    public HashMap<T, Integer>
+    sortByValue(HashMap<T, Integer> hm) {
+        // Create a list from elements of HashMap
+        List<Map.Entry<T, Integer>> list
+                = new LinkedList<Map.Entry<T, Integer>>(
+                hm.entrySet());
+
+        // Sort the list using lambda expression
+        Collections.sort(
+                list,
+                (i1,
+                 i2) -> i2.getValue().compareTo(i1.getValue()));
+
+        // put data from sorted list to hashmap
+        HashMap<T, Integer> temp
+                = new LinkedHashMap<T, Integer>();
+        for (Map.Entry<T, Integer> aa : list) {
+            temp.put(aa.getKey(), aa.getValue());
+        }
+        return temp;
     }
 
     public boolean isKoerper() {
@@ -109,14 +137,20 @@ public class StrukturMitZweiVerknuepfungen<T> {
         if (!isKoerper())
             throw new UnsupportedOperationException("The structure is not a Koerper!");
         List<T> mengeElements = menge.getElements().toList();
+        HashMap<T, Integer> result = new HashMap<T, Integer>();
         for (int i = 0; i < mengeElements.size(); i++) {
             for (int j = 0; j < mengeElements.size(); j++) {
                 if (i == j)
                     continue;
-                if (plus.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))) == plus.apply(new Tupel<>(mengeElements.get(j), mengeElements.get(i))) && plus.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))) == mengeElements.get(i))
-                    return mengeElements.get(j);
+                if (mal.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))) == mal.apply(new Tupel<>(mengeElements.get(j), mengeElements.get(i))) && mal.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))) == mengeElements.get(i)) {
+                    if (result.containsKey(mengeElements.get(j)))
+                        result.put(mengeElements.get(j), result.get(mengeElements.get(j)) + 1);
+                    else
+                        result.put(mengeElements.get(j), 0);
+                }
             }
         }
-        throw new UnsupportedOperationException("dont find null element!");
+        result = sortByValue(result);
+        return result.keySet().stream().toList().get(0);
     }
 }

@@ -126,6 +126,6 @@ public class Relation<T> implements Menge<Tupel<T>> {
     public List<T> getElementsInOrder() {
         if (!isTotalordnung()) throw new UnsupportedOperationException("Not a Total Order");
 
-        return menge.getElements().sorted((t1, t2) -> isInRelation.apply(t1, t2) ? 1 : -1).toList();
+        return menge.getElements().sorted((t1, t2) -> isInRelation.apply(t1, t2) ? -1 : 1).toList();
     }
 }
