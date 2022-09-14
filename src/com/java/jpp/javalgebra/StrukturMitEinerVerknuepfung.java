@@ -103,8 +103,6 @@ public class StrukturMitEinerVerknuepfung<T> {
         boolean isInvers;
         for (int i = 0; i < mengeElements.size(); i++) {
             isInvers = false;
-            if (mengeElements.get(i) == neutralElem)
-                continue;
             for (int j = 0; j < mengeElements.size(); j++) {
                 if (j == i)
                     continue;
