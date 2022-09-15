@@ -102,6 +102,9 @@ public class StrukturMitEinerVerknuepfung<T> {
         List<T> mengeElements = menge.getElements().toList();
         boolean isInvers;
         for (int i = 0; i < mengeElements.size(); i++) {
+            if (mengeElements.get(i)==neutralElem){
+                continue;
+            }
             isInvers = false;
             for (int j = 0; j < mengeElements.size(); j++) {
                 if (j == i)
@@ -113,7 +116,6 @@ public class StrukturMitEinerVerknuepfung<T> {
             if (!isInvers)
                 return false;
         }
-
         return true;
     }
 
