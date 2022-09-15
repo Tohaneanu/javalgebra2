@@ -88,7 +88,7 @@ public class StrukturMitZweiVerknuepfungen<T> {
         }
         result = sortByValue(result);
         if (result.keySet().size()<1)
-            return null;
+            return mengeElements.get(0);
         return result.keySet().stream().toList().get(0);
     }
 
@@ -125,6 +125,10 @@ public class StrukturMitZweiVerknuepfungen<T> {
             nElem = getNull();
         } catch (UnsupportedOperationException ignored) {
 
+        }
+        if (mengeElements.remove(nElem)){
+            if (mengeElements.size()==0)
+                return false;
         }
         for (T elem1 : mengeElements)
             for (T elem2 : mengeElements) {
