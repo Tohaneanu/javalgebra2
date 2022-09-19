@@ -111,6 +111,7 @@ public class StrukturMitEinerVerknuepfung<T> {
                     continue;
                 if (verknuepfung.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(verknuepfung.apply(new Tupel<>(mengeElements.get(j), mengeElements.get(i)))) && verknuepfung.apply(new Tupel<>(mengeElements.get(i), mengeElements.get(j))).equals(neutralElem)) {
                     isInvers = true;
+                    break;
                 }
             }
             if (!isInvers)

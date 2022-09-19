@@ -85,6 +85,6 @@ public class Abbildung<T,S> {
     public Abbildung<S, T> getUmkehrabbildung() {
         if (!isBijektiv())
             throw new UnsupportedOperationException("Abbildung not bijektiv");
-        return null;
+        return new Abbildung<S, T>(ziel,definition, (Function<S, T>) transform);
     }
 }

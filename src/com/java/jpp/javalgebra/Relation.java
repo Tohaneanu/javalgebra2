@@ -111,8 +111,18 @@ public class Relation<T> implements Menge<Tupel<T>> {
 
     public Set<Set<T>> getAequivalenzklassen() {
         if (!isAequivalenzrelation()) throw new UnsupportedOperationException("Relation is not Equivalent");
-
-        return new HashSet<>();
+        HashSet<Set<T>> sets = new HashSet<>();
+        List<T> elements = menge.getElements().toList();
+        for (int i=0;i<elements.size();i++){
+            HashSet<T> ts = new HashSet<>();
+            for (int j=0;j<elements.size();j++){
+                if (isInRelation.apply(elements.get(i),elements.get(j)))
+                    ts.add(elements.get(i));
+            }
+            if (!ts.isEmpty())
+                sets.add(ts);
+        }
+        return sets;
     }
 
     public boolean isAequivalenzrelation() {
